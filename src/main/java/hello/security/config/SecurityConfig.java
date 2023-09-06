@@ -8,7 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 
 @Configuration
@@ -24,17 +26,22 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+	    return new MvcRequestMatcher.Builder(introspector);
+	}	
+	
+	@Bean
+	protected SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable);
 
-//		http.formLogin(form -> form.loginPage("/login").permitAll());
+		http.formLogin(form -> form.loginPage("/login").permitAll());
 
 		// 인증없이 허용 URL 설정
 		http.authorizeHttpRequests(authorize -> authorize
+				.requestMatchers("/admin/**").hasRole("ADMIN")
+				.requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
 				.requestMatchers("/user/**").authenticated()
-                //.requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
-                //.requestMatchers("/admin/**").hasRole("ADMIN")
-                //.anyRequest().permitAll()
+                .anyRequest().permitAll()
 				);
 		
 		
