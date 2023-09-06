@@ -28,7 +28,8 @@ public class SecurityConfig {
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable);
 
-		//http.formLogin(form -> form.loginPage("/login").permitAll());
+		// login 상태가 아니면 로그인페이지로 변경
+		http.formLogin(form -> form.loginPage("/loginForm").permitAll());
 
 		// 인증없이 허용 URL 설정
 		http.authorizeHttpRequests(authorize -> authorize

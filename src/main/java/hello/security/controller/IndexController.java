@@ -2,8 +2,10 @@ package hello.security.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import hello.security.model.User;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,13 +37,20 @@ public class IndexController {
 		return "admin";
 	}	
 
-	@GetMapping("login")
-	public @ResponseBody String login() {
-		return "login";
+	@GetMapping("loginForm")
+	public  String loginForm() {
+		return "loginForm";
+	}
+
+	@GetMapping("joinForm")
+	public String joinForm() {
+		return "joinForm";
 	}
 	
-	@GetMapping("join")
-	public @ResponseBody String join() {
+	@PostMapping("join")
+	public @ResponseBody String join(User user) {
+		
+		log.debug("user={}", user);
 		return "join";
 	}
 
