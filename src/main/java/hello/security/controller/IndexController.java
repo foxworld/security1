@@ -3,12 +3,14 @@ package hello.security.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import hello.security.auth.PrincipalDetails;
 import hello.security.model.User;
 import hello.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,14 @@ public class IndexController {
 	@Autowired private UserRepository repository;
 	@Autowired private BCryptPasswordEncoder passwordEncoder; 
 	
+	@GetMapping("/test/login")
+	public @ResponseBody String testLogin(Authentication authentication) {
+		log.debug("====================================");
+		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+		log.debug("authentication={}", principalDetails.getUser());
+		return "세션정보확인하기";
+	}
+	
 	//localhost:8080/
 	//localhost:8080
 	@GetMapping({"","/"})
@@ -27,7 +37,6 @@ public class IndexController {
 		// 뷰리졸버설정 : template(prefix),, mustache(suffix) 생략가능
 		return "index";
 	}
-
 
 	@GetMapping("user")
 	public @ResponseBody String user() {
@@ -44,12 +53,12 @@ public class IndexController {
 		return "admin";
 	}	
 
-	@GetMapping("loginForm")
+	@GetMapping("login")
 	public  String loginForm() {
 		return "loginForm";
 	}
 
-	@GetMapping("joinForm")
+	@GetMapping("join")
 	public String joinForm() {
 		return "joinForm";
 	}
@@ -62,7 +71,7 @@ public class IndexController {
 		String encPassword = passwordEncoder.encode(rawPassword);
 		user.setPassword(encPassword);
 		repository.save(user);
-		return "redirect:/loginForm";
+		return "redirect:/login";
 	}
 
 	@Secured("ROLE_ADMIN")

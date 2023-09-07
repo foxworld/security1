@@ -44,7 +44,7 @@ public class SecurityConfig {
 		http.csrf(AbstractHttpConfigurer::disable);
 
 		// login 상태가 아니면 로그인페이지로 변경
-		http.formLogin(form -> form.loginPage("/loginForm")
+		http.formLogin(form -> form.loginPage("/login")
 				.loginProcessingUrl("/login") // login 주소가 호출되면 시크리티가 낚아채서 대신 로그인을 진행함
 				.defaultSuccessUrl("/")
 				.permitAll());
@@ -60,7 +60,7 @@ public class SecurityConfig {
 		 * TIP:코드X, (엑세스토큰+사용자프로필정보) 
 		 */
 		http.oauth2Login(oauth2 -> oauth2
-				.loginPage("/loginForm")
+				.loginPage("/login")
 				.userInfoEndpoint(user -> user
 						.userService(principalOAuth2UserService))
 				); 

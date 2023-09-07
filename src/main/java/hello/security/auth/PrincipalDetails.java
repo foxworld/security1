@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import hello.security.model.User;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 /* 시큐리티가 /login 주소 요청이 오면 낚아채서 로그인을 진행시킨다
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  */
  
 @Slf4j
+@Data
 @RequiredArgsConstructor
 public class PrincipalDetails implements UserDetails {
 	private final User user; //콤포지션
