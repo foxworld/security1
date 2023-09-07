@@ -14,7 +14,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity // 스피링 시큐리티 필터가 필터체인에 등록된다
-@EnableMethodSecurity
+/*
+ * 특정 주소 접권권한 및 인증을 위한 어노테이션 활성화
+ * secured 어노테이션 활성화 @Secured("ROLE_ADMIN")
+ * preAuthorize 어노테이션활성화
+ */
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true) 
 public class SecurityConfig {
 
 	@Bean
@@ -29,7 +34,6 @@ public class SecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 	
-
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable);
