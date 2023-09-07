@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +24,22 @@ public class IndexController {
 	@Autowired private BCryptPasswordEncoder passwordEncoder; 
 	
 	@GetMapping("/test/login")
-	public @ResponseBody String testLogin(Authentication authentication) {
-		log.debug("====================================");
+	public @ResponseBody String testLogin(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails) {
+		log.debug("PrincipalDetails====================================");
 		PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 		log.debug("authentication={}", principalDetails.getUser());
+		log.debug("UserDetails={}", userDetails.getUser());
 		return "세션정보확인하기";
 	}
+	
+	@GetMapping("/test/oauth/login")
+	public @ResponseBody String testOAuthLogin(Authentication authentication) {
+		log.debug("oauth2User====================================");
+		OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+		log.debug("oauth2User={}", oauth2User.getAttributes());
+		return "세션정보확인하기";
+	}
+
 	
 	//localhost:8080/
 	//localhost:8080
