@@ -1,16 +1,21 @@
 package hello.security.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import hello.security.model.User;
+import hello.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
 public class IndexController {
+	@Autowired private UserRepository repository;
+	@Autowired private BCryptPasswordEncoder passwordEncoder; 
 	
 	//localhost:8080/
 	//localhost:8080
@@ -48,10 +53,14 @@ public class IndexController {
 	}
 	
 	@PostMapping("join")
-	public @ResponseBody String join(User user) {
-		
+	public String join(User user) {
 		log.debug("user={}", user);
-		return "join";
+		user.setRole("ROLE_USER");
+		String rawPassword = user.getPassword();
+		String encPassword = passwordEncoder.encode(rawPassword);
+		user.setPassword(encPassword);
+		repository.save(user);
+		return "redirect:/loginForm";
 	}
 
 	@GetMapping("joginProc")
