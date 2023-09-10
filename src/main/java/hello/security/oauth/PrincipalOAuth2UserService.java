@@ -1,5 +1,7 @@
 package hello.security.oauth;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -11,6 +13,7 @@ import hello.security.auth.PrincipalDetails;
 import hello.security.model.User;
 import hello.security.oauth.provider.FacebookUserInfo;
 import hello.security.oauth.provider.GoogleUserInfo;
+import hello.security.oauth.provider.NaverUserInfo;
 import hello.security.oauth.provider.OAuth2UserInfo;
 import hello.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -41,8 +44,10 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService{
 			oauth2UserInfo = new GoogleUserInfo(oauth2User.getAttributes());
 		} else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")) {
 			oauth2UserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+		} else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
+			oauth2UserInfo = new NaverUserInfo((Map<String, Object>)oauth2User.getAttributes().get("response"));
 		} else {
-			log.debug("구글 또는 페이스만 로그인가능");
+			log.debug("구글,페이스,네이버 로그인 가능");
 		}
 		
 		String provider = oauth2UserInfo.getProvider();

@@ -7,19 +7,19 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class GoogleUserInfo implements OAuth2UserInfo{
+public class NaverUserInfo implements OAuth2UserInfo{
 	
 	private final Map<String, Object> attributes; //getAttributes()
 
 	@Override
 	public String getProviderId() {
 		// TODO Auto-generated method stub
-		return (String) attributes.get("sub");
+		return (String) attributes.get("id");
 	}
 
 	@Override
 	public String getProvider() {
-		return "google";
+		return "naver";
 	}
 
 	@Override
