@@ -5,6 +5,8 @@ username varchar(255),
 password varchar(255),
 email varchar(255),
 role varchar(255),
+provider varchar(255),
+provider_id varchar(255),
 create_date datetime(8),
 primary key (id)
 )
