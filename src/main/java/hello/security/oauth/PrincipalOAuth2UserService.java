@@ -9,13 +9,16 @@ import org.springframework.stereotype.Service;
 
 import hello.security.auth.PrincipalDetails;
 import hello.security.model.User;
+import hello.security.oauth.provider.FacebookUserInfo;
+import hello.security.oauth.provider.GoogleUserInfo;
+import hello.security.oauth.provider.OAuth2UserInfo;
 import hello.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class PrincipalOAuth2UserService extends DefaultOAuth2UserService{
-	//@Autowired private BCryptPasswordEncoder passwordEncoder;
+//	@Autowired private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Autowired private UserRepository repository;
 	
 	//구글로 부터 받은 userRequest 데이터에 대한 후처리되는 함수
@@ -33,18 +36,27 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService{
 		 */
 		log.debug("loadUser={}", oauth2User.getAttributes());
 		
-		String provider = userRequest.getClientRegistration().getRegistrationId(); // google
-		String providerId = oauth2User.getAttribute("sub"); // google id
-		String username = provider+"_"+providerId; //google_abskfsldfkslfsjflk
-		//String password = passwordEncoder.encode("foxworld");
-		String email = oauth2User.getAttribute("email");
+		OAuth2UserInfo oauth2UserInfo = null;
+		if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+			oauth2UserInfo = new GoogleUserInfo(oauth2User.getAttributes());
+		} else if(userRequest.getClientRegistration().getRegistrationId().equals("facebook")) {
+			oauth2UserInfo = new FacebookUserInfo(oauth2User.getAttributes());
+		} else {
+			log.debug("구글 또는 페이스만 로그인가능");
+		}
+		
+		String provider = oauth2UserInfo.getProvider();
+		String providerId = oauth2UserInfo.getProviderId();
+		String username = provider+"_"+providerId; 
+//		String password = bCryptPasswordEncoder.encode("foxworld");
+		String email = oauth2UserInfo.getEmail();
 		String role = "ROLE_USER";
 		
 		User userEntity = repository.findByUsername(username);
 		if(userEntity == null) {
 			userEntity = User.builder()
 				.username(username)
-				//.password(password)
+//				.password(password)
 				.email(email)
 				.role(role)
 				.provider(provider)
