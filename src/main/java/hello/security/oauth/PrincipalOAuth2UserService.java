@@ -13,6 +13,7 @@ import hello.security.auth.PrincipalDetails;
 import hello.security.model.User;
 import hello.security.oauth.provider.FacebookUserInfo;
 import hello.security.oauth.provider.GoogleUserInfo;
+import hello.security.oauth.provider.KakaoUserInfo;
 import hello.security.oauth.provider.NaverUserInfo;
 import hello.security.oauth.provider.OAuth2UserInfo;
 import hello.security.repository.UserRepository;
@@ -46,6 +47,8 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService{
 			oauth2UserInfo = new FacebookUserInfo(oauth2User.getAttributes());
 		} else if(userRequest.getClientRegistration().getRegistrationId().equals("naver")) {
 			oauth2UserInfo = new NaverUserInfo((Map<String, Object>)oauth2User.getAttributes().get("response"));
+		} else if(userRequest.getClientRegistration().getRegistrationId().equals("kakao")) {
+			oauth2UserInfo = new KakaoUserInfo((Map<String, Object>)oauth2User.getAttributes().get("id"));
 		} else {
 			log.debug("구글,페이스,네이버 로그인 가능");
 		}
