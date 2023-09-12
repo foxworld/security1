@@ -80,7 +80,7 @@ public class IndexController {
 	@PostMapping("join")
 	public String join(User user) {
 		log.debug("user={}", user);
-		user.setRole("ROLE_USER");
+		user.setRoles("ROLE_USER");
 		String rawPassword = user.getPassword();
 		String encPassword = passwordEncoder.encode(rawPassword);
 		user.setPassword(encPassword);

@@ -29,7 +29,7 @@ public class User {
 	private String username;
 	private String password;
 	private String email;
-	private String role; //ROLE_USER, ROLE_ADMIN
+	private String roles; //ROLE_USER, ROLE_ADMIN
 	
 	private String provider;
 	private String providerId;
